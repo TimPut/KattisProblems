@@ -38,7 +38,7 @@ bound u (Interval a b) = Interval (min a u) (min b u)
 -- merge adjacent intervals where possible
 union (x@(Interval a b):y@(Interval c d):is) =
   if (b >= c && a <= d)
-  -- note that we immediately reinsert a unioned interval into the queue for unioning, this makes (fix . union)
+  -- note that we immediately reinsert a unioned interval onto the stack for unioning, this makes (fix . union)
   -- bestcase linear rather than bestcase log-linear. even better, this makes union idempotent on sorted lists
   -- so we can simply call 'union' in O(n) as the outermost call of composeIntervals rather than (fix . union)
   then union $ Interval (min a c) (max b d):is
