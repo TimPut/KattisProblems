@@ -17,7 +17,7 @@ runCase _ = do
   bottles <- forM [1..b] (const $ parseTwo >>= \[a,b] -> pure (Interval a b))
   -- take the fixpoint of the composition of intervals (use of bottles) bounded (non-strict) above by ml
   let reachable = fix (composeIntervals upperBound) bottles
-    -- then print the distance to the nearest interval
+  -- then print the distance to the nearest interval
   if targetMl >= 450000 then print 0 else print . minimum $ fmap (dist targetMl) reachable
 {-# INLINE runCase #-}
 
@@ -39,7 +39,7 @@ bound u (Interval a b) = Interval (min a u) (min b u)
 union (x@(Interval a b):y@(Interval c d):is) =
   if (b >= c && a <= d)
   -- note that we immediately reinsert a unioned interval into the queue for unioning, this makes (fix . union)
-  -- bestcase linear rather than bestcase logarithmic. even better, this makes union idempotent on sorted lists
+  -- bestcase linear rather than bestcase log-linear. even better, this makes union idempotent on sorted lists
   -- so we can simply call 'union' in O(n) as the outermost call of composeIntervals rather than (fix . union)
   then union $ Interval (min a c) (max b d):is
   else x:union (y:is)
