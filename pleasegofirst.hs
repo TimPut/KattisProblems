@@ -1,8 +1,6 @@
-{-# LANGUAGE OverloadedStrings #-}
 import qualified Data.ByteString.Char8 as B
 import Control.Monad
 import Data.Maybe
-import qualified Data.Map as M
 import Data.Char
 
 main = do
