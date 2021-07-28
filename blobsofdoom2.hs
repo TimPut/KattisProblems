@@ -27,9 +27,10 @@ main'' = do
   [k,n] <- fmap (fst . fromJust . B.readInt) . B.words <$> B.getLine :: IO [Int]
   B.putStr . B.pack . show $ solve 0 k n
 
--- solve partial problem
+-- solve partial problem, since problem is continuous
 solve d k n = length . filter id . fmap isSemiprime . take (n-d) . drop d $ f (word k)
 
+-- values are quadratic in n and linear in k
 f k = let fk = (42 : 11*k+77 : zipWith (((+ (10*k)) .) . (-) . (*2)) (tail fk) fk) in headStrict fk
 
 headStrict [] = []
@@ -39,8 +40,9 @@ headStrict (x:xs) = x `seq` (x : headStrict xs)
 word :: Int -> Word64
 word = fromIntegral
 
--- note that: 79371 = ceiling . (**(1/3)) . fromIntegral $ f 100 !! 1000000
--- only need primes <= 79371
+-- note that: 22360694 = ceiling . (**(1/2)) . fromIntegral $ f 100 !! 1000000
+-- while 79371 = ceiling . (**(1/3)) . fromIntegral $ f 100 !! 1000000
+-- only need primes <= 79371 ~ first 7778 primes, instead of the first 1410444 primes
 isSemiprime n = let smallDivisors = findDivisors n primes
                 in case length smallDivisors of
                      0 -> not (isMillerRabinPrime n) -- no divisors < cube root, so either two divisors or prime
