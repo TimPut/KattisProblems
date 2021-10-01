@@ -2,11 +2,10 @@ import qualified Data.ByteString.Char8 as B
 import Data.List
 
 main = do
-  _ <- B.getLine
-  xs <- parse <$> B.getContents :: IO [Int]
-  print $ axis (everyOther xs) + axis (everyOther . tail $ xs)
+  (n:xs) <- parse <$> B.getContents :: IO [Int]
+  B.putStr . B.pack . show $ axis (everyOther xs) + axis (everyOther . tail $ xs)
 
-axis xs = let xs' = sort xs in sum $ zipWith (-) (zipWith (*) xs' [1..]) (scanl1 (+) xs')
+axis xs = let xs' = sort xs in foldl1' (+) $ zipWith (-) (zipWith (*) xs' [1..]) (tail $ scanl' (+) 0 xs')
 
 everyOther (x:y:xs) = x:everyOther xs
 everyOther xs = xs
