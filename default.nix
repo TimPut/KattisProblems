@@ -13,7 +13,7 @@ pkgs.stdenv.mkDerivation rec {
   src = ./.;
   buildInputs = [
     (pkgs.haskell.packages.ghc884.ghcWithPackages (p: with p; [
-      vector QuickCheck parallel containers unordered-containers MemoTrie ghc-core split
+      vector QuickCheck parallel containers unordered-containers MemoTrie ghc-core split smallcheck
     ]))
     pkgs.cabal-install
     pkgs.haskellPackages.haskell-language-server
