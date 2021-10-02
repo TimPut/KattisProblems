@@ -16,21 +16,23 @@ runCase k = do
 solve n = let (p,q) = index (fromIntegral n)
           in show p ++ "/" ++ show q
 
-data BTree a = BTree (BTree a) a (BTree a)
+data BTree a = BTree { left :: BTree a
+                     , label :: a
+                     , right :: BTree a}
   deriving (Show)
-left (BTree bt _ _) = bt
-right (BTree _ _ bt) = bt
-label (BTree _ lbl bt) = lbl
-build (p,q) = BTree l (p,q) r
+
+sequenceTree = build (1,1)
   where
-    l = build (p,p+q)
-    r = build (p+q,q)
+    build (p,q) = BTree l (p,q) r
+        where l = build (p,p+q)
+              r = build (p+q,q)
 
-pathTo n = reverse $ tail . dropWhile (== O) $ w2bs n
-f O = left
-f I = right
+pathTo n = fmap f . reverse $ tail . dropWhile (== O) $ w2bs n
+  where
+    f O = left
+    f I = right
 
-index n = label $ foldr (.) id (fmap f . pathTo $ n) (build (1,1))
+index n = label $ foldr (.) id (pathTo n) sequenceTree
 --------------------------------------------------------------------------------
 -- Utils
 --------------------------------------------------------------------------------
